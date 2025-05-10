@@ -3,18 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Repositories\DepartmentRepository;
+use App\Services\DepartmentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
 
-    // public function __construct(DepartmentService $departmentService)
-    // {
-    //     $this->departmentService = $departmentService;
-    // }
+      protected $departmentService;
+    protected $departmentRepository;
+    public function __construct(DepartmentService $departmentService,
+     DepartmentRepository $departmentRepository)
+    {
+
+        $this->departmentService = $departmentService;
+        $this->departmentRepository = $departmentRepository;
+        
+    }
+
     public function index() {
-        $departments = Department::all();
+        $departments= $this->departmentService->getAllDepartments();
         return view('backend.department.index', compact('departments'));
     }
     

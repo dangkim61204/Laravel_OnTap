@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Collection;
  * Class DepartmentService.
  */
 class DepartmentService
-{ protected $departmentRepository;
+{
+     protected $departmentRepository;
 
     public function __construct(DepartmentRepository $departmentRepository)
     {
