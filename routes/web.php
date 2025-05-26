@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,3 +27,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     //employee
 });
+
+// login admin
+    route::get('/login', [AuthController::class,'index'])->name('auth.login');
+    route::post('/login', [AuthController::class,'login']);
+    route::get('/register', [RegisterController::class,'index'])->name('register.index');
+    route::post('/register', [RegisterController::class,'UsserRegister']);
+    Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+    // dashboard
+Route::get('/dashboard', function () {
+    return view('dashboard.index');
+})->middleware('auth')->name('dashboard.index');
