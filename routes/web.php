@@ -15,26 +15,27 @@ Route::get('/', function () {
 //admin
 Route::prefix('admin')->name('admin.')->group(function () {
     
-    //department
-    Route::prefix('department')->name('department.')->group(function () {
-        Route::get('/',[DepartmentController::class,'index'])->name('index');
-        Route::get('/create',[DepartmentController::class,'create'])->name('create');
-        Route::post('/',[DepartmentController::class,'store'])->name('store');
-        Route::get('/edit/{department}',[DepartmentController::class,'edit'])->name('edit');
-        Route::put('/{department}',[DepartmentController::class,'update'])->name('update');
-        Route::delete('/{department}',[DepartmentController::class,'delete'])->name('delete');
-    });
+    // //department
+    // Route::prefix('department')->name('department.')->group(function () {
+    //     Route::get('/',[DepartmentController::class,'index'])->name('index');
+    //     Route::get('/create',[DepartmentController::class,'create'])->name('create');
+    //     Route::post('/',[DepartmentController::class,'store'])->name('store');
+    //     Route::get('/edit/{department}',[DepartmentController::class,'edit'])->name('edit');
+    //     Route::put('/{department}',[DepartmentController::class,'update'])->name('update');
+    //     Route::delete('/{department}',[DepartmentController::class,'delete'])->name('delete');
+    // });
 
     //employee
 });
 
 // login admin
-    route::get('/login', [AuthController::class,'index'])->name('auth.login');
-    route::post('/login', [AuthController::class,'login']);
-    route::get('/register', [RegisterController::class,'index'])->name('register.index');
-    route::post('/register', [RegisterController::class,'UsserRegister']);
+    Route::get('/login', [AuthController::class,'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class,'login']);
+    route::get('/register', [AuthController::class,'showRegisterForm'])->name('register');
+    route::post('/register', [AuthController::class,'register']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     // dashboard
 Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->middleware('auth')->name('dashboard.index');
+    return view('backend.dashboard.index');
+})->middleware(['auth', 'is_admin'])->name('dashboard.index');
+
