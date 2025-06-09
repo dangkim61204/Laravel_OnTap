@@ -14,7 +14,7 @@ Route::get('/', function () {
 //backend route
 //admin
 Route::prefix('admin')->name('admin.')->group(function () {
-    
+
     // //department
     // Route::prefix('department')->name('department.')->group(function () {
     //     Route::get('/',[DepartmentController::class,'index'])->name('index');
@@ -29,13 +29,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // login admin
-    Route::get('/login', [AuthController::class,'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class,'login']);
-    route::get('/register', [AuthController::class,'showRegisterForm'])->name('register');
-    route::post('/register', [AuthController::class,'register']);
-    Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-    // dashboard
-Route::get('/dashboard', function () {
-    return view('backend.dashboard.index');
-})->middleware(['auth', 'is_admin'])->name('dashboard.index');
-
+// Hiển thị form đăng nhập/đăng ký
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'postlogin'])->name('postlogin');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/register', [AuthController::class, 'postregister'])->name('postregister');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    

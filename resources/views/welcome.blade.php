@@ -28,6 +28,7 @@
                 <input name="name" type="text" placeholder="name...">
                 <input name="email" type="text" placeholder="abc@gmail.com...">
             </form>
+            <a href="{{ route('logout') }}">logout</a>
         </main>
         <footer>
             <!-- place footer here -->

@@ -3,69 +3,59 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use Auth;
-use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function __construct()
+  
+    public function register()
     {
-    }
-    public function showLoginForm()
-    {
-        if (Auth::id() > 0) {
-            return redirect()->route('dashboard.index');
-        }
-
-        return view('backend.login'); // View này phải tồn tại
+        return view('admin.auth.register');
     }
 
-    public function login(Request $request)
+    public function postregister(RegisterRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+        User::create([
+            'name' => $request->get('name'),
+            'email' => $request->get(key: 'email'),
+            'password' => Hash::make($request->get(key: 'password')),
+            'role' => 'User', // Mặc định
         ]);
+
+        return back()->with('message', 'đăng kí thành công ');
+    }
+
+    //dang nhap
+      public function login()
+    {
+        
+        return view('admin.auth.login');
+    }
+
+    public function postlogin(LoginRequest $request)
+    {
+        $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate(); // tránh session hijacking
-
-            if (Auth::user()->role === 'Admin') {
-                return redirect('/dashboard')->with('success', 'Đăng nhập dashbot thành công!');
-            } else {
-                return redirect()->route('/login')->with('error', ' bạn k có quyền');
-            }
-
-
+            $request->session()->regenerate();
+            return redirect()->intended('/');
         }
-        return redirect()->route('/login')->with('error', 'Thông tin tài khoản không chính xác ');
-    }
-    //dang ky
-    public function showRegisterForm()
-    {
-        return view('backend.register');
 
-    }
-    public function register(Request $request)
-    {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'User'
-
-        ]);
-        return redirect()->route('/login')->with('success', 'Đăng ký thành công!');
+        return back()->with('message', 'email hoac mat khau khong dung');
     }
 
-    //thoat
+    //logout
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerate();
-        return redirect()->route('/login')->with('success', 'Đăng xuất thành công');
+
+        return redirect()->route('login');
     }
 }
